@@ -1,0 +1,9 @@
+Slack
+bot_username: @weather_bot
+Verification Token: 8oXlSlYa8tA6celLKfewyyll
+
+
+YahooのAPI
+base_url: https://map.yahooapis.jp/weather/V1/place?
+Client ID: dj00aiZpPUd0aTBqdms3dW1sOCZzPWNvbnN1bWVyc2VjcmV0Jng9YzU-
+coordinates: 36.530213,136.627226
