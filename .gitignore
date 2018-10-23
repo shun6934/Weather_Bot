@@ -1,4 +1,5 @@
 *.json
 *.txt
+*.xml
 .DS_Store
 /vendor/*
