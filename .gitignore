@@ -1,5 +1,4 @@
 *.json
 *.txt
-*.lock
-*.toml
 .DS_Store
+/vendor/*
