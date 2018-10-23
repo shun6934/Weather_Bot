@@ -2,3 +2,4 @@
 *.txt
 *.lock
 *.toml
+.DS_Store
