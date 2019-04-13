@@ -36,7 +36,7 @@ func GetWeather() string {
 	values := url.Values{}
 	baseUrl := "http://api.openweathermap.org/data/2.5/forecast?"
 
-	values.Add("appid", "cb7836e5e29bd6a65eac9ed3997e4c28") // OpenWeatherのAPIKey
+	values.Add("appid", "[APIKey]") // OpenWeatherのAPIKey
 	values.Add("lat", "36.5286")                            // 緯度
 	values.Add("lon", "136.6283")                           // 経度
 
