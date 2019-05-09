@@ -1,1 +1,1 @@
-bot: bin/go run main.go
+bot: go run main.go
