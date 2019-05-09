@@ -1,12 +1,16 @@
 package main
 
 import (
-	"github.com/nlopes/slack"
-	"github.com/shun6934/slackbot/lib"
-	"os"
+	"fmt"
+	"time"
+	"github.com/shun6934/Weather_Bot/lib"
 )
 
 func main() {
-	token := slack.New(os.Getenv("SLACK_API?TOKEN"))
-	os.Exit()
+	getTime := time.Now()
+	const timeLayout = "2006-01-02 15:00:00"
+	now := getTime.Format(timeLayout) // tiem.Time -> string
+
+	result := lib.GetWeather(now)
+	fmt.Printf(result)
 }
