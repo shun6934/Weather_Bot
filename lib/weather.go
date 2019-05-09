@@ -2,11 +2,11 @@ package lib
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 )
 
@@ -36,16 +36,16 @@ type Result struct {
 
 func GetWeather(now string) string {
 	comment := ""
+	key := os.Getenv("API_KEY")
 
 	values := url.Values{}
 	baseUrl := "http://api.openweathermap.org/data/2.5/forecast?"
 
-	values.Add("appid", "[APIKEY]") // OpenWeatherのAPIKey
-	values.Add("lat", "36.5286")    // 緯度
-	values.Add("lon", "136.6283")   // 経度
+	values.Add("appid", key)      // OpenWeatherのAPIKey
+	values.Add("lat", "36.5286")  // 緯度
+	values.Add("lon", "136.6283") // 経度
 
 	weather := ParseJson(baseUrl+values.Encode(), now)
-	fmt.Printf("%s\n", weather)
 
 	switch weather {
 	case "Clear":
@@ -90,7 +90,6 @@ func ParseJson(url string, now string) string {
 
 	if data.List != nil {
 		for _, getTime := range data.List {
-			fmt.Printf("%v\n", getTime)
 			t, _ := time.Parse(timeLayout, getTime.DtTxt) // string -> time.Time
 			if !nowToTime.After(t) {
 				weather = getTime.Weather[0].Main
