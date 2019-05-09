@@ -2,10 +2,12 @@ package lib
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 type Result struct {
@@ -32,20 +34,38 @@ type Result struct {
 	} `json:"list"`
 }
 
-func GetWeather() string {
+func GetWeather(now string) string {
+	comment := ""
+
 	values := url.Values{}
 	baseUrl := "http://api.openweathermap.org/data/2.5/forecast?"
 
-	values.Add("appid", "[APIKey]") // OpenWeatherのAPIKey
-	values.Add("lat", "36.5286")                            // 緯度
-	values.Add("lon", "136.6283")                           // 経度
+	values.Add("appid", "[APIKEY]") // OpenWeatherのAPIKey
+	values.Add("lat", "36.5286")    // 緯度
+	values.Add("lon", "136.6283")   // 経度
 
-	weather := ParseJson(baseUrl + values.Encode())
-	return weather
+	weather := ParseJson(baseUrl+values.Encode(), now)
+	fmt.Printf("%s\n", weather)
+
+	switch weather {
+	case "Clear":
+		comment = "綺麗に晴れています。"
+	case "Clouds":
+		comment = "曇りです。"
+	case "Rain":
+		comment = "雨です。"
+	case "Snow":
+		comment = "雪です。"
+	default:
+		comment = weather
+	}
+	return comment
 }
 
-func ParseJson(url string) string {
+func ParseJson(url string, now string) string {
 	weather := ""
+	const timeLayout = "2006-01-02 15:00:00"
+	nowToTime, _ := time.Parse(timeLayout, now) // string -> time.Time
 
 	response, err := http.Get(url)
 	if err != nil {
@@ -65,10 +85,18 @@ func ParseJson(url string) string {
 	data := new(Result)
 	if err := json.Unmarshal(jsonBytes, data); err != nil {
 		log.Fatalf("Connection Error: %v", err)
+		return "取得できませんでした"
 	}
 
 	if data.List != nil {
-		weather = data.List[0].Weather[0].Main
+		for _, getTime := range data.List {
+			fmt.Printf("%v\n", getTime)
+			t, _ := time.Parse(timeLayout, getTime.DtTxt) // string -> time.Time
+			if !nowToTime.After(t) {
+				weather = getTime.Weather[0].Main
+				break
+			}
+		}
 	}
 	return weather
 }
