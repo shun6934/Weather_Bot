@@ -1,1 +1,1 @@
-bot: go run main.go
+web: Weather_Bot
