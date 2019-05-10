@@ -1,1 +1,1 @@
-web: Weather_Bot
+worker: Weather_Bot
