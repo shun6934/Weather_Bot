@@ -3,4 +3,3 @@
 *.xml
 .DS_Store
 vendor/*
-Procfile
