@@ -32,3 +32,8 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[metadata.heroku]
+  root-package = "github.com/shun6934/Weather_Bot"
+  go-version = "1.12.1"
+  ensure = "true"
