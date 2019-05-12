@@ -9,6 +9,7 @@ jobs:
       - image: circleci/golang:1.10.2
     environment:
       - GOCACHE: "/tmp/go/cache"
+      # - GOPATH: "/home/circleci/go"
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -19,7 +20,7 @@ jobs:
     #### expecting it in the form of
     ####   /go/src/github.com/circleci/go-tool
     ####   /go/src/bitbucket.org/circleci/go-tool
-    working_directory: /go/src/github.com/shun6934/slakbot
+    working_directory: /go/src/github.com/shun6934/Weather_Bot
     steps:
       - checkout
       - run: git submodule sync
@@ -58,8 +59,9 @@ jobs:
       - run:
           name: prepare cache dir if not exists
           command: mkdir -p $GOCACHE
+      # - run: echo 'export PATH=$PATH:$GOPATH/bin' >> $BASH_ENV
       - persist_to_workspace:
           root: /
           paths:
             - tmp/go/cache
-            - go/src/github.com/shun6934/slackbot
+            - go/src/github.com/shun6934/Weather_Bot
