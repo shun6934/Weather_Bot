@@ -1,1 +1,0 @@
-worker: Weather_Bot
