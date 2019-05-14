@@ -1,13 +1,14 @@
 package lib
 
 import (
+	"math"
 	"strconv"
 	"time"
 )
 
 func GetNowTemperture() string {
 	comment := ""
-	var temperture string
+	temperture := ""
 
 	date := GetAPI()
 
@@ -15,13 +16,26 @@ func GetNowTemperture() string {
 	now := time.Now()
 
 	if date.List != nil {
+		var prevTime time.Time
+		var prevTem float64
+
 		for _, getTime := range date.List {
 			loc, _ := time.LoadLocation("Asia/Tokyo")
-			t, _ := time.ParseInLocation(timeLayout, getTime.DtTxt, loc) // string -> time.Time
-			if !now.After(t) {
-				temperture = strconv.FormatFloat(getTime.Main.Temp, 'g', 4, 64)
+			dateTime, _ := time.ParseInLocation(timeLayout, getTime.DtTxt, loc) // string -> time.Time
+
+			beforeDuration := math.Abs(now.Sub(prevTime).Hours())
+			afterDuration := math.Abs(now.Sub(dateTime).Hours())
+
+			if now.Before(dateTime) {
+				if beforeDuration < afterDuration {
+					temperture = strconv.FormatFloat(prevTem, 'g', 4, 64)
+				} else {
+					temperture = strconv.FormatFloat(getTime.Main.Temp, 'g', 4, 64)
+				}
 				break
 			}
+			prevTime = dateTime
+			prevTem = getTime.Main.Temp
 		}
 		comment = "現在の気温は、" + temperture + "度です。"
 	}
