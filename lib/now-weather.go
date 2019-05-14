@@ -1,12 +1,14 @@
 package lib
 
 import (
+	"math"
 	"time"
 )
 
 func GetNowWeather() string {
 	comment := ""
 	date := GetAPI()
+
 	weather, description := DiscriminateWeather(date)
 
 	switch weather {
@@ -33,14 +35,30 @@ func DiscriminateWeather(date *Result) (string, string) {
 	now := time.Now()
 
 	if date.List != nil {
+		var prevTime time.Time
+		var prevWeather string
+		var prevDescription string
+
 		for _, getTime := range date.List {
 			loc, _ := time.LoadLocation("Asia/Tokyo")
-			t, _ := time.ParseInLocation(timeLayout, getTime.DtTxt, loc) // string -> time.Time
-			if !now.After(t) {
-				weather = getTime.Weather[0].Main
-				description = getTime.Weather[0].Description
+			dateTime, _ := time.ParseInLocation(timeLayout, getTime.DtTxt, loc) // string -> time.Time
+
+			beforeDuration := math.Abs(now.Sub(prevTime).Hours())
+			afterDuration := math.Abs(now.Sub(dateTime).Hours())
+
+			if now.Before(dateTime) {
+				if beforeDuration < afterDuration {
+					weather = prevWeather
+					description = prevDescription
+				} else {
+					weather = getTime.Weather[0].Main
+					description = getTime.Weather[0].Description
+				}
 				break
 			}
+			prevTime = dateTime
+			prevWeather = getTime.Weather[0].Main
+			prevDescription = getTime.Weather[0].Description
 		}
 	}
 	return weather, description
