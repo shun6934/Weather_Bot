@@ -1,5 +1,5 @@
 *.json
-*.txt
 *.xml
+*.md
 .DS_Store
 vendor/*

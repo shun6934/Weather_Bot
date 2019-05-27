@@ -9,8 +9,7 @@ import (
 	"os"
 )
 
-func GetAPI() *Result {
-	baseUrl := "http://api.openweathermap.org/data/2.5/forecast?"
+func GetAPI(baseUrl string) (*WeatherResult, *ForecastResult) {
 	key := os.Getenv("API_KEY")
 	values := url.Values{}
 
@@ -32,9 +31,13 @@ func GetAPI() *Result {
 	}
 
 	jsonBytes := ([]byte)(body)
-	date := new(Result)
-	if err := json.Unmarshal(jsonBytes, date); err != nil {
+	weatherDate := new(WeatherResult)
+	forecastDate := new(ForecastResult)
+	if err := json.Unmarshal(jsonBytes, forecastDate); err != nil {
 		log.Fatalf("Connection Error: %v", err)
 	}
-	return date
+	if err := json.Unmarshal(jsonBytes, weatherDate); err != nil {
+		log.Fatalf("Connection Error: %v", err)
+	}
+	return weatherDate, forecastDate
 }
